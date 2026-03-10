@@ -14,7 +14,7 @@ define('LANDING_PAGE', '
 
 	<p><strong>Everything works the same:</strong> tool, data, database all unchanged. artoo.info redirects here automatically. <em>Bookmark the new address!</em></p>	
 
-	<p><a href="https://github.com/artoo-git/OpenPhoda-SeV">Open Source version of the Phoda-SeV</a> scale for Chronic Low Back Pain</p>
+	<p><a href="https://github.com/artoo-dv/OpenPhoda-SeV">Open Source version of the Phoda-SeV</a> scale for Chronic Low Back Pain</p>
 
 	<h2> Why developing an open source Phoda-Sev tool?</h2>
 	<p>The University of Leuven releases a proprietary version of the Phoda-SeV in "Windows" format. I thought it may have been useful to create a version of the software which (provided that a browser and internet connection is available) is capable to:</p>
