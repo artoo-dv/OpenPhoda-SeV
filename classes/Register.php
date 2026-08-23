@@ -28,6 +28,10 @@ class Register
      */
     public  $verification_successful  = false;
     /**
+     * @var string|null recovery code generated for a newly registered experiment
+     */
+    public  $recovery_code            = null;
+    /**
      * @var array collection of error messages
      */
     public  $errors                   = array();
@@ -131,32 +135,13 @@ class Register
                 $q_ins_new_exp->bindValue(':exp_princ_inv', $exp_princ_inv, PDO::PARAM_STR);
                 $q_ins_new_exp->bindValue(':recovery_code', $recovery_code, PDO::PARAM_STR); // ADD THIS LINE
                 $q_ins_new_exp->execute();
-                
-                // DISPLAY RECOVERY CODE TO USER 
-                ?>
-                <div style="background: #fffacd; padding: 20px; border: 3px solid #ffd700; margin: 20px; text-align: center;">
-                    <h2 style="color: #d32f2f;">IMPORTANT: Save Your Recovery Code</h2>
-                    <div style="font-size: 28px; font-weight: bold; color: #000; background: white; padding: 10px; border: 2px solid #333; letter-spacing: 2px;">
-                        <?php echo htmlspecialchars($recovery_code); ?>
-                    </div>
-                    <p style="font-size: 16px; margin-top: 15px;">
-                        <strong>Write this code down and store it safely!</strong><br>
-                        You will need this code if you ever forget your password.
-                    </p>
-                    <p style="color: #d32f2f; font-weight: bold;">
-                        This code will NOT be shown again!
-                    </p>
-                </div>
-                <script>
-                    // Auto-redirect after 15 seconds to ensure user sees the code
-                    setTimeout(function(){ 
-                        window.location.href = "index.php"; 
-                    }, 15000);
-                </script>
-                <p style="text-align: center;">You will be redirected to the main page in 15 seconds...</p>
-                <?php
-                
-                // Don't redirect immediately - let user see the recovery code
+
+                // hand the recovery code back to the view instead of echoing it here directly -
+                // this used to print raw HTML/JS before the page's <!DOCTYPE>/<head> were even
+                // output (registerNewExp runs before views/register.php includes the header),
+                // so it rendered unstyled and overlapped the login page's background artwork
+                $this->registration_successful = true;
+                $this->recovery_code = $recovery_code;
             }
         }
     }
