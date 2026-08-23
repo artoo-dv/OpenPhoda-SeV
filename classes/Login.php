@@ -18,10 +18,17 @@ class Login
     private $exp_name = "";
     
     private $exp_is_logged_in = false;
-    
+
+    private $step2_passed = false;
+
     public $errors = array();
-    
+
     public $messages = array();
+
+    /**
+     * @var string|null message to alert the user with on the login page (e.g. bad credentials)
+     */
+    public $login_error = null;
 
 
     public function __construct()
@@ -158,27 +165,19 @@ class Login
             $result_row = $this->getexpData(trim($exp_name));
             // if this exp does not exists
             if (! isset($result_row->id)) {
-                
+
                 // was MESSAGE_exp_DOES_NOT_EXIST before, but has changed to MESSAGE_LOGIN_FAILED
                 // to prevent potential attackers showing if the exp exists
                 #'$this->errors[] = MESSAGE_LOGIN_FAILED;
-              //  echo "login failed with experiment id: '" . $exp_name . "'";
-              //  header("location:". $_SERVER['REQUEST_URI']);
-                ?>
-                            <script type="text/javascript"> alert("login failed with experiment id: <?php echo $exp_name;?>. \n This experiment name may not be registered");
-                            window.location.href = "exp.php";
-                            </script>';
-                            <?php
-                            //header("Refresh:5; location:". $_SERVER['REQUEST_URI']);
-                
+                // hand the message to the view instead of echoing it here directly - this used
+                // to print raw <script> HTML before the page's <!DOCTYPE>/<head> were even output
+                // (Login's constructor runs before any view is included), so it rendered unstyled
+                // and reflected $exp_name unescaped into an inline script (XSS)
+                $this->login_error = "login failed with experiment id: " . $exp_name . ". \nThis experiment name may not be registered";
+
             } else if (! password_verify($exp_password, $result_row->exp_password_hash)) {
-                ?>
-                            <script type="text/javascript"> alert("password not accepted for experiment id: <?php echo $exp_name;?>");
-                            window.location.href = "exp.php";
-                            </script>';
-                            <?php
-               //header("location:". $_SERVER['REQUEST_URI']);
-                
+                $this->login_error = "password not accepted for experiment id: " . $exp_name;
+
             } else {
 
                 $_SESSION['exp_id'] = $result_row->id;
