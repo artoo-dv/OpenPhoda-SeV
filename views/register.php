@@ -28,6 +28,9 @@
     }, 1000);
 </script>
 <?php } else { ?>
+<?php if ($register->name_taken) { ?>
+<script type="text/javascript">alert("This experiment name is taken");</script>
+<?php } ?>
 <div class="login">
 	<p>
 	<label for="register">Create new dataset</label>

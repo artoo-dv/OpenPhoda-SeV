@@ -32,6 +32,10 @@ class Register
      */
     public  $recovery_code            = null;
     /**
+     * @var bool whether registration failed because the experiment name is already taken
+     */
+    public  $name_taken               = false;
+    /**
      * @var array collection of error messages
      */
     public  $errors                   = array();
@@ -98,14 +102,12 @@ class Register
             // TODO: this is really awful!
             if (count($result) > 0) {
                 for ($i = 0; $i < count($result); $i++) {
-                    if ($result[$i]['exp_name'] == $exp_name){?>
-                            <script type="text/javascript"> alert("This experiment name is taken");
-                            window.location.href = "register.php";
-                            </script>
-                            <?php
-                            //header("location:". $_SERVER['REQUEST_URI']);
+                    if ($result[$i]['exp_name'] == $exp_name){
+                        // hand this back to the view instead of echoing a raw <script> here -
+                        // this used to print before the page's <!DOCTYPE>/<head> were even output
+                        $this->name_taken = true;
                     }
-                } 
+                }
             } else {
                 // check if we have a constant HASH_COST_FACTOR defined (in config/hashing.php),
                 // if so: put the value into $hash_cost_factor, if not, make $hash_cost_factor = null
