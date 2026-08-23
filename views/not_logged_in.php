@@ -1,5 +1,11 @@
 <?php include('views/_headerTest.php');?>
 
+<?php if (!empty($login->login_error)) { ?>
+<script type="text/javascript">
+    alert(<?php echo json_encode($login->login_error, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>);
+</script>
+<?php } ?>
+
 <div class="login">
 	<p>
 	<table>
