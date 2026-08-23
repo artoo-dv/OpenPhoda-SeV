@@ -128,6 +128,12 @@ float: right;}
   margin: 0em;
   padding:2px;
   background-color: #29e;
+  transition: transform 0.15s ease-out;
+}
+
+/* no transition while actively being dragged, so movement stays instant */
+.draggable.dragging {
+  transition: none;
 }
 
 /* Add hover state for better visibility */

@@ -1,4 +1,8 @@
 
+// scale a card is shown at once it has been placed, vs. while dragging/hovering
+var PLACED_SCALE = 0.50;
+var FULL_SCALE = 1;
+
 // target elements with the "draggable" class
 interact('.draggable')
   .draggable({
@@ -13,7 +17,12 @@ interact('.draggable')
     ],
     // enable autoScroll
     autoScroll: true,
-    
+
+    // full size and no transition animation while actively dragging
+    onstart: function (event) {
+      event.target.classList.add('dragging');
+      setTransform(event.target, FULL_SCALE);
+    },
     // call this function on every dragmove event
     onmove: dragMoveListener,
     // call this function on every dragend event
@@ -33,7 +42,11 @@ interact('.draggable')
       var cellId = "col" + event.target.id;
       var cell= document.getElementById(cellId);
       cell.innerHTML = position;
-      
+
+      // shrink the card now that it has been placed, to reduce clutter
+      element.classList.remove('dragging');
+      element.classList.add('placed');
+      setTransform(element, PLACED_SCALE);
     }
   });
 
@@ -43,15 +56,35 @@ interact('.draggable')
         x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
         y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
 
-    // translate the element
-    target.style.webkitTransform =
-    target.style.transform =
-      'translate(' + x + 'px, ' + y + 'px)';
-
     // update the position attributes
     target.setAttribute('data-x', x);
     target.setAttribute('data-y', y);
+
+    // translate the element, full size while being dragged
+    setTransform(target, FULL_SCALE);
   }
+
+  // combine the stored translate position with a scale factor;
+  // interact.js sets style.transform directly so scale has to travel
+  // through here rather than a separate CSS rule, which would be
+  // overridden by that inline style.
+  function setTransform (target, scale) {
+    var x = parseFloat(target.getAttribute('data-x')) || 0;
+    var y = parseFloat(target.getAttribute('data-y')) || 0;
+    var transform = 'translate(' + x + 'px, ' + y + 'px) scale(' + scale + ')';
+    target.style.webkitTransform = target.style.transform = transform;
+  }
+
+  // once a card is placed, grow it back to full size on hover so it can
+  // still be inspected/re-dragged, then shrink it again on mouseleave
+  document.addEventListener('mouseover', function (event) {
+    var el = event.target.closest && event.target.closest('.draggable.placed');
+    if (el) setTransform(el, FULL_SCALE);
+  });
+  document.addEventListener('mouseout', function (event) {
+    var el = event.target.closest && event.target.closest('.draggable.placed');
+    if (el && !el.contains(event.relatedTarget)) setTransform(el, PLACED_SCALE);
+  });
 
   function postAjax(postdata) {
     
