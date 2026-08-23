@@ -43,10 +43,14 @@ interact('.draggable')
       var cell= document.getElementById(cellId);
       cell.innerHTML = position;
 
-      // shrink the card now that it has been placed, to reduce clutter
+      // shrink the card now that it has been placed, to reduce clutter -
+      // unless the pointer is still resting on it right after the drop (no
+      // mouseover/mouseout transition will fire until it actually leaves and
+      // comes back, so shrinking underneath a still-hovering cursor would get
+      // stuck shrunk until the next hover)
       element.classList.remove('dragging');
       element.classList.add('placed');
-      setTransform(element, PLACED_SCALE);
+      setTransform(element, element.matches(':hover') ? FULL_SCALE : PLACED_SCALE);
     }
   });
 
