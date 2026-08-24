@@ -81,7 +81,7 @@ if ($_POST['change_password']) {
 <head>
     <title>Change Password - OpenPhoda-SeV</title>
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Droid+Sans+Mono" />
-    <link href="css/main.css" rel="stylesheet" />
+    <link href="css/main.css?v=1" rel="stylesheet" />
     <style>
         .error { color: #c0392b; background: #fdecea; border: 1px solid #f5c6c0; padding: .6em 1em; border-radius: 6px; margin-bottom: 1em; }
         .success { color: #1e7e34; background: #e9f7ef; border: 1px solid #c3e6cb; padding: .6em 1em; border-radius: 6px; margin-bottom: 1em; }

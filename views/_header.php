@@ -11,14 +11,14 @@
 		<?php
 		if ($login->isexpLoggedIn() == true){?>
 
-		<link href="css/main.css" rel="stylesheet" />
+		<link href="css/main.css?v=1" rel="stylesheet" />
 	<!-- Scripts -->
-	
+
 
 		<?php
 		} else {?>
-			
-		<link href="css/index.css" rel="stylesheet" />
+
+		<link href="css/index.css?v=1" rel="stylesheet" />
 			<?php
 		}
 		?>

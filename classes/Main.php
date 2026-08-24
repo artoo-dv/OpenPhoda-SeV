@@ -363,7 +363,7 @@ class Main
                 }
             }
         }?>
-            <script src="js/ajax.js"></script>
+            <script src="js/ajax.js?v=1"></script>
             <script>
             var subjects = <?php echo json_encode($subjects); ?>;
             var therapists = <?php echo json_encode($therapists); ?>;

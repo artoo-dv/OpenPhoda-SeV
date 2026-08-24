@@ -11,12 +11,12 @@
 		<?php
 		if ($login->isexpLoggedIn() == true){?>
 
-			<link href="css/test.css" rel="stylesheet" />
+			<link href="css/test.css?v=1" rel="stylesheet" />
 
 	<!-- Scripts -->
 		<script src="https://unpkg.com/interactjs@next/dist/interact.min.js"></script>
-		<script src="js/drag.js"></script>
-		
+		<script src="js/drag.js?v=1"></script>
+
 		<script>
 		function instructions() {
 				alert("At the center of the screen there is a deck with forty cards. Each card represents a daily activity that you may find potentially harmful. Place each card on the board so that the position will represent how much each activity may be harmful.\n You can see a full size version of the picture using double-click");
@@ -25,7 +25,7 @@
 
 			<?php
 		} else {
-			echo '<link href="css/login.css" rel="stylesheet" />';
+			echo '<link href="css/login.css?v=1" rel="stylesheet" />';
 		}?>
 		
 
