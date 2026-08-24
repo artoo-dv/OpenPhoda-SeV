@@ -1,17 +1,13 @@
-body { 
-	color:#000; 
-	display:block; 
+body {
+	color:#000;
+	display:block;
 	font-family: 'Open Sans', sans-serif;
 	font-size: 2vh;
-	margin:0 auto; 
-	overflow:auto; 
-	overflow-x:hidden; 
-	padding:0px; 
-	background:#54a4bd url("../img/Chronic_pain_openphoda.jpg");
-	background-size: 100vh auto; 
-	background-attachment:fixed; 
-	background-position:center center; 
-	background-repeat:no-repeat;}
+	margin:0 auto;
+	overflow:auto;
+	overflow-x:hidden;
+	padding:0px;
+	background:#54a4bd;}
 img { 
 	border:0; 
 	height:auto; 
@@ -32,6 +28,12 @@ p  {padding: .5em 0em 0.5em 0em;
 	line-height: 1.5;
 	color:inherit;
 }
+.summary-row{
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 1.5em;
+}
 .summary{padding:0em 0em 0em 1.5em;
 
 }
@@ -46,6 +48,67 @@ p  {padding: .5em 0em 0.5em 0em;
 	padding:0em 0em 0em 1.5em;}
 .experiment tr td{
 	padding-top: .8em;
+}
+.measures-scroll{
+	overflow-x: auto;
+	margin: 1em 0em 1em 1.5em;
+	width: calc(100% - 1.5em);
+}
+.measures{
+	border-collapse: collapse;
+	width: 100%;
+	min-width: 40em;
+}
+.measures tr th{
+	text-align: left;
+	border-bottom: 2px solid;
+	padding: .4em 1.2em .4em .6em;
+	cursor: pointer;
+	user-select: none;
+	position: relative;
+}
+.measures tr th:hover{
+	background: rgba(0,0,0,.05);
+}
+.measures tr th.sorted-asc::after,
+.measures tr th.sorted-desc::after{
+	position: absolute;
+	right: .4em;
+}
+.measures tr th.sorted-asc::after{
+	content: "▲";
+}
+.measures tr th.sorted-desc::after{
+	content: "▼";
+}
+.measures tr td{
+	padding: .3em .6em;
+	border-bottom: 1px solid rgba(0,0,0,.2);
+}
+.tabs{
+	margin: 1.5em 0em 0em 1.5em;
+	border-bottom: 2px solid rgba(0,0,0,.15);
+}
+.tab-link{
+	background: none;
+	border: none;
+	border-bottom: 3px solid transparent;
+	padding: .6em 1.2em;
+	margin-bottom: -2px;
+	font-family: 'Open Sans', sans-serif;
+	font-size: 1em;
+	color: #333;
+	cursor: pointer;
+}
+.tab-link.active{
+	border-bottom-color: #3bb3e0;
+	font-weight: bold;
+}
+.tab-content{
+	display: none;
+}
+.tab-content.active{
+	display: block;
 }
 .sections{
 	width: 95vw;
@@ -80,19 +143,39 @@ p  {padding: .5em 0em 0.5em 0em;
 		margin-left: auto;
 		margin-right:auto;}
 
-.boxcenter { 
-	background-color:#FFF; 
-	color:#303030; 
-	font-size: 2vh; 
-	line-height:1.5; 
-	margin:62vh auto 0% auto ; 
-	padding:0% 5% 0% 5%; 
-	word-wrap: break-word;} 
-	.boxcenter a:link { 
-		color:#303030; 
-		text-decoration:none;} 
-	.boxcenter a:hover { 
-		color:#0000FF; 
+.boxcenter {
+	background-color:#FFF;
+	color:#303030;
+	font-size: 2vh;
+	line-height:1.5;
+	margin:62vh auto 0% auto ;
+	padding:0% 5% 0% 5%;
+	word-wrap: break-word;}
+	.boxcenter a:link {
+		color:#303030;
+		text-decoration:none;}
+	.boxcenter a:hover {
+		color:#0000FF;
+		text-decoration:underline; }
+.page-card{
+	background-color:#FFF;
+	max-width: 1200px;
+	margin: 3vh auto;
+	border-radius: 12px;
+	box-shadow: 0 2px 16px rgba(0,0,0,.1);
+	overflow: hidden;}
+.dashboard{
+	background-color:#FFF;
+	color:#303030;
+	font-size: 2vh;
+	line-height:1.5;
+	padding: 3vh 5% 0% 5%;
+	word-wrap: break-word;}
+	.dashboard a:link {
+		color:#303030;
+		text-decoration:none;}
+	.dashboard a:hover {
+		color:#0000FF;
 		text-decoration:underline; }
 	.boxcenter1 { 
 		background-color:#FFF; 

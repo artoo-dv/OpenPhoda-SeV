@@ -30,7 +30,26 @@ class Main
 
         else if (isset($_SESSION)){
             $this->drawSummary($_SESSION['exp_id']);
-            $this->form($_SESSION['exp_id']);
+            ?>
+            <div class="tabs">
+                <button type="button" class="tab-link active" onclick="showMainTab('new-measure', this)">Begin new measure</button>
+                <button type="button" class="tab-link" onclick="showMainTab('previous-measures', this)">Previous measures</button>
+            </div>
+            <div id="tab-new-measure" class="tab-content active">
+                <?php $this->form($_SESSION['exp_id']); ?>
+            </div>
+            <div id="tab-previous-measures" class="tab-content">
+                <?php $this->drawMeasuresTable($_SESSION['exp_id']); ?>
+            </div>
+            <script>
+            function showMainTab(id, btn) {
+                document.querySelectorAll('.tab-content').forEach(function (el) { el.classList.remove('active'); });
+                document.querySelectorAll('.tab-link').forEach(function (el) { el.classList.remove('active'); });
+                document.getElementById('tab-' + id).classList.add('active');
+                btn.classList.add('active');
+            }
+            </script>
+            <?php
         }
         else{echo "smt wrong";}
 
@@ -63,21 +82,35 @@ class Main
     // Create a file pointer 
         $f = fopen('php://memory', 'w'); 
  
-        // Set column headers 
-        $fields = array('ID', 'therapistID', 'PatientID', 'Sesssion', 'ExpCondotion', 'SessionDate','PHODA_1','PHODA_2','PHODA_3','PHODA_4','PHODA_5','PHODA_6','PHODA_7','PHODA_8','PHODA_9','PHODA_10','PHODA_11','PHODA_12','PHODA_13','PHODA_14','PHODA_15','PHODA_16','PHODA_17','PHODA_18','PHODA_19','PHODA_20','PHODA_21','PHODA_22','PHODA_23','PHODA_24','PHODA_25','PHODA_26','PHODA_27','PHODA_28','PHODA_29','PHODA_30','PHODA_31','PHODA_32','PHODA_33','PHODA_34','PHODA_35','PHODA_36','PHODA_37','PHODA_38','PHODA_39','PHODA_40'); 
-        fputcsv($f, $fields, $delimiter); 
- 
-    // Get records from the database 
-    
+        // Set column headers
+        $fields = array('ID', 'therapistID', 'PatientID', 'Sesssion', 'ExpCondotion', 'SessionDate', 'Status', 'MeanScore', 'PHODA_1','PHODA_2','PHODA_3','PHODA_4','PHODA_5','PHODA_6','PHODA_7','PHODA_8','PHODA_9','PHODA_10','PHODA_11','PHODA_12','PHODA_13','PHODA_14','PHODA_15','PHODA_16','PHODA_17','PHODA_18','PHODA_19','PHODA_20','PHODA_21','PHODA_22','PHODA_23','PHODA_24','PHODA_25','PHODA_26','PHODA_27','PHODA_28','PHODA_29','PHODA_30','PHODA_31','PHODA_32','PHODA_33','PHODA_34','PHODA_35','PHODA_36','PHODA_37','PHODA_38','PHODA_39','PHODA_40');
+        fputcsv($f, $fields, $delimiter);
+
+    // Get records from the database
+
         $result = $this->getexpData($exp_id);
 
-        if(isset($result)){ 
-    // Output each row of the data, format line as csv and write to file pointer 
+        if(isset($result)){
+    // Output each row of the data, format line as csv and write to file pointer
         foreach ($result as $row) {
-            $lineData = array($row->id, $row->thrpstID, $row->patientID, $row->session, $row->exp_cond, $row->session_date,$row->PHODA_1,$row->PHODA_2,$row->PHODA_3,$row->PHODA_4,$row->PHODA_5,$row->PHODA_6,$row->PHODA_7,$row->PHODA_8,$row->PHODA_9,$row->PHODA_10,$row->PHODA_11,$row->PHODA_12,$row->PHODA_13,$row->PHODA_14,$row->PHODA_15,$row->PHODA_16,$row->PHODA_17,$row->PHODA_18,$row->PHODA_19,$row->PHODA_20,$row->PHODA_21,$row->PHODA_22,$row->PHODA_23,$row->PHODA_24,$row->PHODA_25,$row->PHODA_26,$row->PHODA_27,$row->PHODA_28,$row->PHODA_29,$row->PHODA_30,$row->PHODA_31,$row->PHODA_32,$row->PHODA_33,$row->PHODA_34,$row->PHODA_35,$row->PHODA_36,$row->PHODA_37,$row->PHODA_38,$row->PHODA_39,$row->PHODA_40); 
-            fputcsv($f, $lineData, $delimiter); 
-        } 
-        } 
+            // still-open measures may be an active session on another device right now -
+            // include them, but don't compute a mean from what could be partial data
+            $isComplete = empty($row->measure_hash);
+            $status = $isComplete ? 'Completed' : 'Incomplete';
+            $mean = $isComplete
+                ? round(($row->PHODA_1 + $row->PHODA_2 + $row->PHODA_3 + $row->PHODA_4 + $row->PHODA_5 +
+                            $row->PHODA_6 + $row->PHODA_7 + $row->PHODA_8 + $row->PHODA_9 + $row->PHODA_10 +
+                            $row->PHODA_11 + $row->PHODA_12 + $row->PHODA_13 + $row->PHODA_14 + $row->PHODA_15 +
+                            $row->PHODA_16 + $row->PHODA_17 + $row->PHODA_18 + $row->PHODA_19 + $row->PHODA_20 +
+                            $row->PHODA_21 + $row->PHODA_22 + $row->PHODA_23 + $row->PHODA_24 + $row->PHODA_25 +
+                            $row->PHODA_26 + $row->PHODA_27 + $row->PHODA_28 + $row->PHODA_29 + $row->PHODA_30 +
+                            $row->PHODA_31 + $row->PHODA_32 + $row->PHODA_33 + $row->PHODA_34 + $row->PHODA_35 +
+                            $row->PHODA_36 + $row->PHODA_37 + $row->PHODA_38 + $row->PHODA_39 + $row->PHODA_40) / 40)
+                : 'NA';
+            $lineData = array($row->id, $row->thrpstID, $row->patientID, $row->session, $row->exp_cond, $row->session_date, $status, $mean, $row->PHODA_1,$row->PHODA_2,$row->PHODA_3,$row->PHODA_4,$row->PHODA_5,$row->PHODA_6,$row->PHODA_7,$row->PHODA_8,$row->PHODA_9,$row->PHODA_10,$row->PHODA_11,$row->PHODA_12,$row->PHODA_13,$row->PHODA_14,$row->PHODA_15,$row->PHODA_16,$row->PHODA_17,$row->PHODA_18,$row->PHODA_19,$row->PHODA_20,$row->PHODA_21,$row->PHODA_22,$row->PHODA_23,$row->PHODA_24,$row->PHODA_25,$row->PHODA_26,$row->PHODA_27,$row->PHODA_28,$row->PHODA_29,$row->PHODA_30,$row->PHODA_31,$row->PHODA_32,$row->PHODA_33,$row->PHODA_34,$row->PHODA_35,$row->PHODA_36,$row->PHODA_37,$row->PHODA_38,$row->PHODA_39,$row->PHODA_40);
+            fputcsv($f, $lineData, $delimiter);
+        }
+        }
     #print_r($lineData);
  
     // Move back to beginning of file 
@@ -159,6 +192,7 @@ class Main
     {
         if ($this->getexpInfo($exp_id) != NULL){
             $summaryA = $this->getexpInfo($exp_id);?>
+            <div class="summary-row">
             <table class="summary">
             <tr><th colspan="2">Summary</th>
             <tr><td>Experiment name: </td>
@@ -167,29 +201,107 @@ class Main
             <tr><td>Created on: </td>
                 <td><?php echo $summaryA->exp_registration_datetime;?></td>
             </tr>
-            <tr><td>P.I. :</td>
-                <td><?php echo $summaryA->exp_princ_inv;?></td>
-            </tr>
             <tr><td colspan="2" style="border-top: 1px solid"></td></tr>
 
-            </table>            
+            </table>
+            <?php if ($this->getexpData($exp_id) != NULL) { ?>
+            <form method="POST" action="index.php">
+            <button class="button" name="dl" onclick="ajaxDl()" value="submit">Download CSV</button>
+            </form>
+            <?php } ?>
+            </div>
             <?php
         }
+    }
+
+    private function drawMeasuresTable($exp_id)
+    {
         if ($this->getexpData($exp_id) != NULL){
-            
+
             $summaryB = $this->getexpData($exp_id);
-            $phodaTot = array();
-            foreach($summaryB as $data){
-                $mean = ($data->PHODA_1 + $data->PHODA_2 + $data->PHODA_3 + $data->PHODA_4 + $data->PHODA_5 +
-                            $data->PHODA_6 + $data->PHODA_7 + $data->PHODA_8 + $data->PHODA_9 + $data->PHODA_10 +
-                            $data->PHODA_11 + $data->PHODA_12 + $data->PHODA_13 + $data->PHODA_14 + $data->PHODA_15 +
-                            $data->PHODA_16 + $data->PHODA_17 + $data->PHODA_18 + $data->PHODA_19 + $data->PHODA_20 +
-                            $data->PHODA_21 + $data->PHODA_22 + $data->PHODA_23 + $data->PHODA_24 + $data->PHODA_25 +
-                            $data->PHODA_26 + $data->PHODA_27 + $data->PHODA_28 + $data->PHODA_29 + $data->PHODA_30 +
-                            $data->PHODA_31 + $data->PHODA_32 + $data->PHODA_33 + $data->PHODA_34 + $data->PHODA_35 +
-                            $data->PHODA_36 + $data->PHODA_37 + $data->PHODA_38 + $data->PHODA_39 + $data->PHODA_40)/40;
-            array_push($phodaTot, round($mean));
+            ?>
+            <div class="measures-scroll">
+            <table class="measures">
+            <thead>
+            <tr>
+                <th onclick="sortMeasures(0, this)">Patient ID</th>
+                <th onclick="sortMeasures(1, this)">Therapist ID</th>
+                <th onclick="sortMeasures(2, this)">Session</th>
+                <th onclick="sortMeasures(3, this)">Condition</th>
+                <th onclick="sortMeasures(4, this)">Date</th>
+                <th onclick="sortMeasures(5, this)">Status</th>
+                <th onclick="sortMeasures(6, this)">Mean score</th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($summaryB as $data) {
+                // a still-open measure may be an active session on another device right
+                // now - show it, but don't compute a mean from what could be partial data
+                $isComplete = empty($data->measure_hash);
+                $status = $isComplete ? 'Completed' : 'Incomplete';
+                $mean = $isComplete
+                    ? round(($data->PHODA_1 + $data->PHODA_2 + $data->PHODA_3 + $data->PHODA_4 + $data->PHODA_5 +
+                                $data->PHODA_6 + $data->PHODA_7 + $data->PHODA_8 + $data->PHODA_9 + $data->PHODA_10 +
+                                $data->PHODA_11 + $data->PHODA_12 + $data->PHODA_13 + $data->PHODA_14 + $data->PHODA_15 +
+                                $data->PHODA_16 + $data->PHODA_17 + $data->PHODA_18 + $data->PHODA_19 + $data->PHODA_20 +
+                                $data->PHODA_21 + $data->PHODA_22 + $data->PHODA_23 + $data->PHODA_24 + $data->PHODA_25 +
+                                $data->PHODA_26 + $data->PHODA_27 + $data->PHODA_28 + $data->PHODA_29 + $data->PHODA_30 +
+                                $data->PHODA_31 + $data->PHODA_32 + $data->PHODA_33 + $data->PHODA_34 + $data->PHODA_35 +
+                                $data->PHODA_36 + $data->PHODA_37 + $data->PHODA_38 + $data->PHODA_39 + $data->PHODA_40) / 40)
+                    : 'NA';
+                ?>
+                <tr>
+                    <td><?php echo htmlspecialchars($data->patientID); ?></td>
+                    <td><?php echo htmlspecialchars($data->thrpstID); ?></td>
+                    <td><?php echo htmlspecialchars($data->session); ?></td>
+                    <td><?php echo htmlspecialchars($data->exp_cond); ?></td>
+                    <td><?php echo htmlspecialchars($data->session_date); ?></td>
+                    <td><?php echo $status; ?></td>
+                    <td><?php echo $mean; ?></td>
+                </tr>
+            <?php } ?>
+            </tbody>
+            </table>
+            </div>
+            <script>
+            function sortMeasures(colIndex, th) {
+                var table = th.closest('table');
+                var tbody = table.querySelector('tbody');
+                var rows = Array.prototype.slice.call(tbody.querySelectorAll('tr'));
+                var ascending = th.getAttribute('data-sort-dir') !== 'asc';
+
+                function isNumeric(text) {
+                    return text !== '' && !isNaN(Number(text));
+                }
+
+                rows.sort(function (a, b) {
+                    var aText = a.children[colIndex].textContent.trim();
+                    var bText = b.children[colIndex].textContent.trim();
+                    var aNumeric = isNumeric(aText);
+                    var bNumeric = isNumeric(bText);
+                    var cmp;
+                    if (aNumeric && bNumeric) {
+                        cmp = Number(aText) - Number(bText);
+                    } else if (aNumeric !== bNumeric) {
+                        // one side is a non-numeric placeholder like "NA" - always sort it last
+                        cmp = aNumeric ? -1 : 1;
+                    } else {
+                        cmp = aText.localeCompare(bText);
+                    }
+                    return ascending ? cmp : -cmp;
+                });
+
+                table.querySelectorAll('th').forEach(function (header) {
+                    header.classList.remove('sorted-asc', 'sorted-desc');
+                    if (header !== th) header.removeAttribute('data-sort-dir');
+                });
+                th.setAttribute('data-sort-dir', ascending ? 'asc' : 'desc');
+                th.classList.add(ascending ? 'sorted-asc' : 'sorted-desc');
+
+                rows.forEach(function (row) { tbody.appendChild(row); });
             }
+            </script>
+            <?php
         }
     }
 
@@ -260,14 +372,6 @@ class Main
             autocomplete(document.getElementById("thrpstID"), therapists);
             autocomplete(document.getElementById("condition"), conditions);
             </script>
-            
-            <!-- GET CSV -->
-            <form method="POST" action="index.php">
-            <button class="button" name="dl" onclick="ajaxDl()"  value="submit" style="float:right;">Download CSV</button>
-            </form>
-            
-
-          
             <?php
     }
 
