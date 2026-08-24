@@ -80,46 +80,58 @@ if ($_POST['change_password']) {
 <html>
 <head>
     <title>Change Password - OpenPhoda-SeV</title>
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Droid+Sans+Mono" />
+    <link href="css/main.css" rel="stylesheet" />
     <style>
-        .error { color: red; }
-        .success { color: green; }
-        .form-group { margin: 10px 0; }
-        input[type="password"] { width: 200px; padding: 5px; }
-        input[type="submit"] { padding: 8px 16px; background: #007cba; color: white; border: none; cursor: pointer; }
+        .error { color: #c0392b; background: #fdecea; border: 1px solid #f5c6c0; padding: .6em 1em; border-radius: 6px; margin-bottom: 1em; }
+        .success { color: #1e7e34; background: #e9f7ef; border: 1px solid #c3e6cb; padding: .6em 1em; border-radius: 6px; margin-bottom: 1em; }
+        .form-group { margin: 1em 0; }
+        .form-group label { display: block; margin-bottom: .3em; }
+        input[type="password"] { width: 16em; max-width: 100%; padding: .5em; font-size: 1em; }
     </style>
 </head>
 <body>
-    <h2>Change Password</h2>
-    
+<div class="page-card">
+<div class="dashboard" style="text-align:left;">
+    <div class="menu">
+        <div style="float: left;">Change Password</div>
+        <div style="clear: both;"></div>
+    </div>
+</div>
+
+<div class="sections" style="padding: 2% 5% 3% 5%;">
+
     <?php if (isset($error)): ?>
         <div class="error"><?php echo htmlspecialchars($error); ?></div>
     <?php endif; ?>
-    
+
     <?php if (isset($success)): ?>
         <div class="success"><?php echo htmlspecialchars($success); ?></div>
     <?php endif; ?>
-    
+
     <form method="post">
         <div class="form-group">
-            <label>Current Password:</label><br>
+            <label>Current Password:</label>
             <input type="password" name="current_password" required>
         </div>
-        
+
         <div class="form-group">
-            <label>New Password:</label><br>
+            <label>New Password:</label>
             <input type="password" name="new_password" required>
         </div>
-        
+
         <div class="form-group">
-            <label>Confirm New Password:</label><br>
+            <label>Confirm New Password:</label>
             <input type="password" name="confirm_password" required>
         </div>
-        
+
         <div class="form-group">
-            <input type="submit" name="change_password" value="Change Password">
+            <button class="button" type="submit" name="change_password" value="Change Password">Change Password</button>
         </div>
     </form>
-    
+
     <p><a href="index.php">Back to Main</a></p>
+</div>
+</div>
 </body>
 </html>
