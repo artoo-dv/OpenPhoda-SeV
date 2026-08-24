@@ -32,4 +32,4 @@
 
 </head>
 
-<body onload="instructions()">
+<body<?php if ($login->isexpLoggedIn() == true) { ?> onload="instructions()"<?php } ?>>
