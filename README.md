@@ -14,6 +14,9 @@ OpenPhoda-SeV is a webapp for delivery of the electronic version of the PHODA (P
 
 A free to use version of OpenPhoda can be found here: [OpenPhoda](https://openphoda.net/)
 
+### Recent updates
+
+The dashboard, drag-and-drop test board, and account pages recently got a UI facelift: tabbed navigation, a sortable results table, a tablet-friendly layout, and a handful of security/reliability fixes under the hood. Comments and feature requests are welcome - feel free to open an issue!
 
 ### Screenshots
 
