@@ -52,7 +52,7 @@ class Register
         
         if (isset($_POST["register"])) {
 
-            $this->registerNewExp($_POST['exp_name'], $_POST['password'],$_POST['pi']);
+            $this->registerNewExp($_POST['exp_name'], $_POST['password']);
             
         }
     }
@@ -84,11 +84,10 @@ class Register
     }
 
 
-    private function registerNewExp($exp_name, $exp_password, $exp_princ_inv)
+    private function registerNewExp($exp_name, $exp_password)
     {
-        // we just remove extra space on expname 
+        // we just remove extra space on expname
         $exp_name = trim($exp_name);
-        $exp_princ_inv = trim($exp_princ_inv);
 
         if ($this->databaseConnection()) {
 
@@ -120,21 +119,18 @@ class Register
                 
                 // write new exp data into database - MODIFIED INSERT
                 $q_ins_new_exp = $this->db_connection->prepare("INSERT INTO experiments (
-                        exp_name, 
-                        exp_password_hash, 
-                        exp_princ_inv,
+                        exp_name,
+                        exp_password_hash,
                         exp_recovery_code,
-                        exp_registration_datetime) 
+                        exp_registration_datetime)
                     VALUES(
-                        :exp_name, 
-                        :exp_password_hash, 
-                        :exp_princ_inv,
+                        :exp_name,
+                        :exp_password_hash,
                         :recovery_code,
                         NOW())");
 
                 $q_ins_new_exp->bindValue(':exp_name', $exp_name, PDO::PARAM_STR);
                 $q_ins_new_exp->bindValue(':exp_password_hash', $exp_password_hash, PDO::PARAM_STR);
-                $q_ins_new_exp->bindValue(':exp_princ_inv', $exp_princ_inv, PDO::PARAM_STR);
                 $q_ins_new_exp->bindValue(':recovery_code', $recovery_code, PDO::PARAM_STR); // ADD THIS LINE
                 $q_ins_new_exp->execute();
 
