@@ -159,9 +159,7 @@ class Test
                     window.location.href = "index.php";
                 </script><?php
             }else{
-                
-                
-                $results->id[0];
+
                 //echo $result["measure_hash"];
                 $i=40;
                 $files = scandir('pics/',1);
