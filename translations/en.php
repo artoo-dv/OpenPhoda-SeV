@@ -40,9 +40,9 @@ define('LANDING_PAGE', '
 	<ul>
 	<li>Apache 2.4.0+ (or NGNIX)</li>
 
-	<li>PHP 7.0.0+</li>
+	<li>PHP 7.4.0+ (tested through PHP 8.2)</li>
 
-	<li>MySQL 5.7+ or mariaDB 10.3+</li>
+	<li>MySQL 5.7+ or MariaDB 10.3+ (tested through MariaDB 10.11)</li>
 	</ul>
 
 	<h2 id="referencephoda">References </h2>
