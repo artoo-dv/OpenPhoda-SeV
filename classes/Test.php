@@ -94,52 +94,53 @@ class Test
         
         if ($this->databaseConnection()) {
             $hash = sha1(time());
-            // check if client-name exist in the database
-            if ($this->checkUnique($patientID)){
 
-                $query_data = $this->db_connection->prepare('INSERT INTO data (
-                    measure_hash,
-                    exp_id,
-                    thrpstID, 
-                    patientID, 
-                    session,
-                    exp_cond, 
-                    session_date) 
-                    VALUES(
-                    :measure_hash,
-                    :exp_id,
-                    :thrpstID, 
-                    :patientID, 
-                    :session,
-                    :exp_cond,
-                    NOW())');
-                $query_data->bindValue(':measure_hash', $hash, PDO::PARAM_STR);
-                $query_data->bindValue(':exp_id', $exp_id, PDO::PARAM_STR);
-                $query_data->bindValue(':thrpstID', $thrpstID, PDO::PARAM_STR);
-                $query_data->bindValue(':patientID', $patientID, PDO::PARAM_STR);
-                $query_data->bindValue(':session', $session, PDO::PARAM_STR);
-                $query_data->bindValue(':exp_cond', $condition, PDO::PARAM_STR);
-                $query_data->execute();
-                //$query_data->debugDumpParams();
-                
-                $query_subj = $this->db_connection->prepare('INSERT INTO subjects (
-                    patientID,
-                    exp_id,
-                    reg_date) 
-                    VALUES(
-                    :patientID,
-                    :exp_id, 
-                    NOW())');
-                $query_subj->bindValue(':patientID', $patientID, PDO::PARAM_STR);
-                $query_subj->bindValue(':exp_id', $exp_id, PDO::PARAM_STR);
-                $query_subj->execute();
-                header('location: exp.php?m=' . $hash);
-            } else{
+            $query_data = $this->db_connection->prepare('INSERT INTO data (
+                measure_hash,
+                exp_id,
+                thrpstID,
+                patientID,
+                session,
+                exp_cond,
+                session_date)
+                VALUES(
+                :measure_hash,
+                :exp_id,
+                :thrpstID,
+                :patientID,
+                :session,
+                :exp_cond,
+                NOW())');
+            $query_data->bindValue(':measure_hash', $hash, PDO::PARAM_STR);
+            $query_data->bindValue(':exp_id', $exp_id, PDO::PARAM_STR);
+            $query_data->bindValue(':thrpstID', $thrpstID, PDO::PARAM_STR);
+            $query_data->bindValue(':patientID', $patientID, PDO::PARAM_STR);
+            $query_data->bindValue(':session', $session, PDO::PARAM_STR);
+            $query_data->bindValue(':exp_cond', $condition, PDO::PARAM_STR);
+            $query_data->execute();
+            //$query_data->debugDumpParams();
 
-                ?><script type="text/javascript"> alert("This subject name already exist");
-                    window.location.href = "index.php";
-                </script><?php
+            // register the subject the first time they're seen; a patient can have
+            // any number of measures/sessions, so an existing subject is not an error
+            if ($this->checkUnique($patientID) === true) {
+                try {
+                    $query_subj = $this->db_connection->prepare('INSERT INTO subjects (
+                        patientID,
+                        exp_id,
+                        reg_date)
+                        VALUES(
+                        :patientID,
+                        :exp_id,
+                        NOW())');
+                    $query_subj->bindValue(':patientID', $patientID, PDO::PARAM_STR);
+                    $query_subj->bindValue(':exp_id', $exp_id, PDO::PARAM_STR);
+                    $query_subj->execute();
+                } catch (PDOException $e) {
+                    // a concurrent request registered this subject in the same instant; harmless
+                }
             }
+
+            header('location: exp.php?m=' . $hash);
         }
     }
 
