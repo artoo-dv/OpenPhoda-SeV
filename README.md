@@ -31,8 +31,8 @@ The dashboard, drag-and-drop test board, and account pages recently got a UI fac
 
 Any webserver running:
 * Apache 2.4.0 (or NGNIX)
-* PHP 7.0.0+
-* MySQL 5.7+ or mariaDB 10.3+
+* PHP 7.4+ (tested through PHP 8.2)
+* MySQL 5.7+ or MariaDB 10.3+ (tested through MariaDB 10.11)
 
 
 ## References
