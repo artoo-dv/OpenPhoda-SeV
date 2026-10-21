@@ -55,6 +55,7 @@ p  {padding: .5em 0em 0.5em 0em;
 	width: calc(100% - 1.5em);
 }
 .measures{
+	font-size: .8em;
 	border-collapse: collapse;
 	width: 100%;
 	min-width: 40em;
