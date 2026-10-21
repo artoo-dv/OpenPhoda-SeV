@@ -7,3 +7,14 @@
 banner.png
 baselineRaw
 endOfTreatRaw
+
+# OS / editor junk
+.DS_Store
+*~
+
+# secrets and environment files
+.env*
+
+# backups and dumps
+*.bak
+*.sql
