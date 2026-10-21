@@ -11,7 +11,7 @@
 		<?php
 		if ($login->isexpLoggedIn() == true){?>
 
-		<link href="css/main.css?v=1" rel="stylesheet" />
+		<link href="css/main.css?v=2" rel="stylesheet" />
 	<!-- Scripts -->
 
 
